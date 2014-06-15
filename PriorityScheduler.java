@@ -543,16 +543,12 @@ public class PriorityScheduler extends Scheduler
                 "ERROR sanity check for "
                 + sanityThread
                 + " FAILED"
-                + ". Donor: "
-                + dt.donor.thread
-                + " doesn't know it's a donor";
+                + ". Donor doesn't know it's a donor";
             String thirdFail = 
                 "ERROR sanity check for "
                 + sanityThread
                 + " FAILED"
-                + ". Received donation from queue "
-                + dt.queueDonorCameFrom.queueID
-                + " but transferPriority is false";
+                + ". Received but transferPriority is false";
             
             // Make sure no donation happens when donations are disabled. 
             if(!transferPriority) { 
