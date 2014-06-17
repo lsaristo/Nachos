@@ -1,16 +1,16 @@
-/**
- * Test the functionality of the PriorirtyScheduler class
- * Note that this module must be imported into files wishing to be tested.
+/** 
+ * Test the functionality of the PriorirtyScheduler class Note that this module
+ * must be imported into files wishing to be tested.
  *
- * Calling symantics: 
- *  - Run a single test contained herein: PrioritySchedulerTest.testx() for test number x.
- *  - Run all tests contained hereing: PrioritySchedulerTest.runall().
+ * Calling symantics: - Run a single test contained herein:
+ * PrioritySchedulerTest.testx() for test number x.  - Run all tests contained
+ * hereing: PrioritySchedulerTest.runall().
  *
- * Note that methods declared here must be static to function properly. 
- * 'make' changes to this file from the respective projx directory. 
+ * Note that methods declared here must be static to function properly.  'make'
+ * changes to this file from the respective projx directory. 
  *
- * To see DEBUGGING output on the console, run nachos with the -d x switch (along with any
- *  other debugging flags, of course. 
+ * To see DEBUGGING output on the console, run nachos with the -d x switch
+ * (along with any other debugging flags, of course. 
  */
 package nachos.threads;
 import nachos.threads.*;
@@ -18,7 +18,7 @@ import nachos.machine.*;
  
 public class LotterySchedulerTest 
 {
-    /* Shared data goes here to be accessed by all threads */
+    // Shared data goes here to be accessed by all threads
     private static Lock lock1 = new Lock();
     private static Lock lock2 = new Lock();
     private static Lock conditionLock = new Lock();
@@ -36,12 +36,10 @@ public class LotterySchedulerTest
     private static Semaphore ordering2 = new Semaphore(0);
     private static boolean wrongOrder = true;
     
-    /**
-     * This test program grabs a lock then does a long computation 
-     * spanning multiple yield()s. The purpose of this test is to 
-     * verify that the functionality of the PriorityQueue behaves as 
-     * expected with the Lock class. 
-     */ 
+    // This test program grabs a lock then does a long computation 
+    // spanning multiple yield()s. The purpose of this test is to 
+    // verify that the functionality of the PriorityQueue behaves as 
+    // expected with the Lock class. 
     static class Program_1 implements Runnable
     {
         public void run()
@@ -52,7 +50,7 @@ public class LotterySchedulerTest
             Lib.debug(dbgTesting,"[ Program_1 ]: Aquiring Lock lock1");
             lock1.acquire(); 
 
-            /* Wake up the main thread */
+            // Wake up the main thread
             Lib.debug(dbgTesting,"[ Program_1 ]: Calling mutex.V() to wake up main thread");
             mutex.V();
             Lib.debug(dbgTesting,"[ Program_1 ]: Now that we've got the lock, lets do something time-consuming");
@@ -101,7 +99,8 @@ public class LotterySchedulerTest
     }
 
 
-    /* Simple program that really just says hello and yeilds(). Uses sharedInteger to echo a count. Useful for shared testing */
+    // Simple program that really just says hello and yeilds(). Uses
+    // sharedInteger to echo a count. Useful for shared testing
     static class Program_4 implements Runnable
     {
         private static final String ID = "Program_4";
@@ -138,7 +137,8 @@ public class LotterySchedulerTest
         }
     }    
 
-    /* An even simpler program than program 4, just prints thread stats and yields. Input arg is loop count */
+    // An even simpler program than program 4, just prints thread stats and
+    // yields. Input arg is loop count
     static class Program_5 implements Runnable
     {
         private int loopCount;
@@ -160,7 +160,8 @@ public class LotterySchedulerTest
         }
     }
 
-    /* This program ping/pongs with Program_7 using condition variables and semaphores */
+    // This program ping/pongs with Program_7 using condition variables and
+    // semaphores
     static class Program_6 implements Runnable
     {
         public void run()
@@ -184,7 +185,8 @@ public class LotterySchedulerTest
         }
     }
 
-    /* This program forks its own threads. This should be used as part of test5 to add complexity */
+    // This program forks its own threads. This should be used as part of test5
+    // to add complexity
     static class Program_8 implements Runnable
     {
         public void run()
@@ -212,7 +214,7 @@ public class LotterySchedulerTest
 
 
 
-    /* Ping poings with program_6 using condition variables. This one wakes up 6 */
+    // Ping poings with program_6 using condition variables. This one wakes up 6
     static class Program_7 implements Runnable
     {
         public void run()
@@ -229,14 +231,14 @@ public class LotterySchedulerTest
         }
     }
 
-    /**
-     * This program performs a nonlinear operation on a shared data item. The intent is to be used with
-     * another program that performs some other non-linear operations. This can be used to detect if two
-     * threads execute in the proper order by examining the shared data value after both have executed. 
-     */
+    // This program performs a nonlinear operation on a shared data item. The
+    // intent is to be used with another program that performs some other
+    // non-linear operations. This can be used to detect if two threads execute
+    // in the proper order by examining the shared data value after both have
+    // executed. 
     static class Program_10 implements Runnable
-    
-        /* Return the value produed by the running of this program as a KThread */{
+    { 
+        // Return the value produed by the running of this program as a KThread
         public double returnValue(double inValue)
         {
             double outValue = inValue;
@@ -259,16 +261,19 @@ public class LotterySchedulerTest
         }
     }
 
-    /* Grab a lock and wait for priority donation. This thread should receive priority of 7 */
+    // Grab a lock and wait for priority donation. This thread should receive
+    // priority of 7
     static class Program_11 implements Runnable
     {
         public void run()
         {
-            /* Grab the lock sqrt thread is going to be wanting and change nonLinearSharedData */
+            // Grab the lock sqrt thread is going to be wanting and change
+            // nonLinearSharedData
             sharedIntLock.acquire();
             nonLinearSharedData--;
 
-            /* First ensure that priority is default at this point since it shouldn't have changed yet */
+            // First ensure that priority is default at this point since it
+            // shouldn't have changed yet
             boolean st = Machine.interrupt().disable();
             Lib.assertTrue(ThreadedKernel.scheduler.getEffectivePriority(KThread.getCurrentThread()) == 1,
                 "ERROR: "+KThread.getCurrentThread()+" should have priority 1");
@@ -277,7 +282,7 @@ public class LotterySchedulerTest
             Lib.debug(dbgTesting, "[Program_11]: Got the lock, yielding()");
             KThread.yield();
 
-            /* sqrt should have donated priority of 7 to this thread by now */            
+            // sqrt should have donated priority of 7 to this thread by now            
             st = Machine.interrupt().disable();
             Lib.assertTrue(ThreadedKernel.scheduler.getEffectivePriority(KThread.getCurrentThread()) == 7,
                 "ERROR: "+KThread.getCurrentThread()+" should have priority 7");
@@ -286,7 +291,8 @@ public class LotterySchedulerTest
             Lib.debug(dbgTesting, "[Program_11]: Releasing the lock");
             sharedIntLock.release();
 
-            /* Now that the lock has been released, priority should have returned to 1 by now via release() */
+            // Now that the lock has been released, priority should have
+            // returned to 1 by now via release()
             st = Machine.interrupt().disable();
             Lib.assertTrue(ThreadedKernel.scheduler.getEffectivePriority(KThread.getCurrentThread()) == 1,
                 "ERROR: "+KThread.getCurrentThread()+" should have priority 7");
@@ -294,10 +300,11 @@ public class LotterySchedulerTest
         }
     }
 
-    /* The second of two non-linear transformation programs on a shared data variable */
+    // The second of two non-linear transformation programs on a shared data
+    // variable
     static class Program_9 implements Runnable
     {
-        /* Return the value produed by the running of this program as a KThread */
+        // Return the value produed by the running of this program as a KThread
         public double returnValue(double inValue)
         {
             double outValue = inValue;
@@ -320,7 +327,9 @@ public class LotterySchedulerTest
         }
     }
 
-    /* This program grabs a series of resources in a systematic way to compel priority donation. Works in conjunction with Programs 13 and 14 and test8()*/
+    // This program grabs a series of resources in a systematic way to compel
+    // priority donation. Works in conjunction with Programs 13 and 14 and
+    // test8()
     static class Program_12 implements Runnable
     {
         static KThread currentBestThread;
@@ -340,27 +349,29 @@ public class LotterySchedulerTest
                 = ((PriorityScheduler)ThreadedKernel.scheduler).getThreadState(KThread.getCurrentThread());
             Lib.debug(dbgTesting, "[ Program_12 ]: T1 got conditionLock, calling mutex.p() to sleep and waking up main"); 
 
-            /* Grab the conditionLock and go to sleep */
+            // Grab the conditionLock and go to sleep
             conditionLock.acquire();
 
-            /* Wake up main and then go to sleep. main will then fork off T2 and T3 */
+            // Wake up main and then go to sleep. main will then fork off T2 and T3
             ordering.V();
             mutex.P();
 
-            /* Verify donation from Program_13 and Program_14 which are waiting for conditionLock */
+            // Verify donation from Program_13 and Program_14 which are waiting
+            // for conditionLock
             boolean st = Machine.interrupt().disable();
             checkValue = ThreadedKernel.scheduler.getEffectivePriority(KThread.getCurrentThread());
             Lib.assertTrue(checkValue == 15, "** DONATION ERROR: Expected 15, got "+checkValue);
             checkValue = currentThreadState.donationManagementDB.size();
             Lib.assertTrue(checkValue == 2, "** Donation DB ERROR: expected 2, got "+checkValue);
             
-            /* Verify that priority donation changes when setPriority is called */
+            // Verify that priority donation changes when setPriority is called
             ThreadedKernel.scheduler.setPriority(KThread.getCurrentThread(), 1200);
             checkValue = ThreadedKernel.scheduler.getEffectivePriority(KThread.getCurrentThread());
             Lib.assertTrue(checkValue == 1212, "** DONATION ERROR: expected 1212, got "+ checkValue);
             Machine.interrupt().restore(st);
             
-            /* Now set priority of a donor thread and verify that it propagates here */
+            // Now set priority of a donor thread and verify that it propagates
+            // here
             st = Machine.interrupt().disable();
             ThreadedKernel.scheduler.setPriority(transitiveDonationThread, 50);
             checkValue = ThreadedKernel.scheduler.getEffectivePriority(KThread.getCurrentThread());
@@ -376,25 +387,25 @@ public class LotterySchedulerTest
             Lib.assertTrue(checkValue == 0, "** Donation DB ERROR: expected 0, got "+checkValue);
             Machine.interrupt().restore(st);
 
-            /* Grab lock1 and sleep. Program_13 and Program_14 should run now */
+            // Grab lock1 and sleep. Program_13 and Program_14 should run now
             lock1.acquire();
             ordering2.P();
         
-            /*
-             * Woken up by Program_13 which is now bloked on lock1. Program_14 is blocked on lock2 held by Program_13.
-             * We should have a donation strategy as follows:
-             * T3 ---> L2, T2 ----> L1, T1
-             */
+            // Woken up by Program_13 which is now bloked on lock1. Program_14
+            // is blocked on lock2 held by Program_13.  We should have a
+            // donation strategy as follows: T3 ---> L2, T2 ----> L1, T1
             st = Machine.interrupt().disable();
             checkValue = ThreadedKernel.scheduler.getEffectivePriority(KThread.getCurrentThread()); 
             Lib.assertTrue(checkValue == 1257, "** DONATION ERROR: Expected 1257, got "+checkValue);
             checkValue = currentThreadState.donationManagementDB.size();
 
-            /* Note that now we only receive 1 donation but it's actually the sum of 2 donors via transitivity */
+            // Note that now we only receive 1 donation but it's actually the
+            // sum of 2 donors via transitivity
             Lib.assertTrue(checkValue == 1, "** Donation DB ERROR: expected 1, got "+checkValue);
             Machine.interrupt().restore(st);
 
-            /* Finally, set priority of T3 and verify that it propagates through the network as shown above */
+            // Finally, set priority of T3 and verify that it propagates through
+            // the network as shown above
             st = Machine.interrupt().disable();
             ThreadedKernel.scheduler.setPriority(transitiveDonationThread, 47);
             checkValue = ThreadedKernel.scheduler.getEffectivePriority(KThread.getCurrentThread());
@@ -406,7 +417,7 @@ public class LotterySchedulerTest
             Lib.assertTrue(checkValue == 1307, "** DONATION ERROR: expected 1307, got "+ checkValue);
             Machine.interrupt().restore(st);
 
-            /* Release the lock and verify priority changes accordingly */
+            // Release the lock and verify priority changes accordingly
             lock1.release();
             st = Machine.interrupt().disable();
             checkValue = ThreadedKernel.scheduler.getEffectivePriority(KThread.getCurrentThread());
@@ -415,13 +426,14 @@ public class LotterySchedulerTest
             Lib.assertTrue(checkValue == 0, "** Donation DB ERROR: expected 0, got "+checkValue);
             Machine.interrupt().restore(st);
 
-            /* Nothing left to do in here. Program_13 should now have control */
+            // Nothing left to do in here. Program_13 should now have control
 
 
         }
     }
 
-    /* Part of a 3 program set in test8 with Program_14 and Program_12 that runs a series of chained dependence priority donation tests */
+    // Part of a 3 program set in test8 with Program_14 and Program_12 that runs
+    // a series of chained dependence priority donation tests
     static class Program_13 implements Runnable
     {
         static KThread currentBestThread;
@@ -430,7 +442,7 @@ public class LotterySchedulerTest
 
         public void run()
         {
-            /* Everyone is asleep except (maybe) Program_14 */
+            // Everyone is asleep except (maybe) Program_14
             Lib.debug(dbgTesting, "[ Program_13 ]: T2 Entered Program_13");
 
             boolean st = Machine.interrupt().disable();
@@ -439,7 +451,7 @@ public class LotterySchedulerTest
             Lib.assertTrue(ThreadedKernel.scheduler.getEffectivePriority(KThread.getCurrentThread()) == 7);
             Machine.interrupt().restore(st);
           
-            /* Block on conditionLock now since T1 has it */ 
+            // Block on conditionLock now since T1 has it 
             Lib.debug(dbgTesting, "[ Program_13 ]: T2 Acquiring conditionLock");
 
             mutex2.V();
@@ -447,15 +459,17 @@ public class LotterySchedulerTest
             conditionLock.acquire();
             wrongOrder = false;
 
-            /* Lock 2 is going to be blocked on Program_14. Now Program_12 has lock1 so this thread will block */
+            // Lock 2 is going to be blocked on Program_14. Now Program_12 has
+            // lock1 so this thread will block
             lock2.acquire(); 
             mutex3.V();
-            mutex3 = new Semaphore(1); // Wake-up and/or prevent Programo_14 from sleeping
+            mutex3 = new Semaphore(1); 
             conditionLock.release();
 
-            lock1.acquire(); // Go to sleep on lock1. Held by Program_12
+            lock1.acquire(); 
 
-            /* We're back so Program_12 release lock1 and is now dead. 1st verify donation from Program_14 */
+            // We're back so Program_12 release lock1 and is now dead. 1st
+            // verify donation from Program_14
             st = Machine.interrupt().disable();
             int checkValue = ThreadedKernel.scheduler.getEffectivePriority(KThread.getCurrentThread());
             Lib.assertTrue(checkValue == 107, "** DONATION ERROR: expected 107, got "+ checkValue);
@@ -463,12 +477,13 @@ public class LotterySchedulerTest
             Lib.assertTrue(checkValue == 1, "** Donation DB ERROR: expected 1, got "+checkValue);
             Machine.interrupt().restore(st);
 
-            /* Release the lock2 and conditionLock */
+            // Release the lock2 and conditionLock
             lock2.release();
         }
     }
 
-    /* Together with Program_13 and 12, runs a series of transitivity donation tests by creating a triangular-style resource dependency */
+    // Together with Program_13 and 12, runs a series of transitivity donation
+    // tests by creating a triangular-style resource dependency
     static class Program_14 implements Runnable
     {
         int checkValue = 0;
@@ -481,16 +496,16 @@ public class LotterySchedulerTest
             Lib.assertTrue(ThreadedKernel.scheduler.getEffectivePriority(KThread.getCurrentThread()) == 5);
             Machine.interrupt().restore(st);
 
-            /*
-             * Main is sleeping on ordering. T1 is sleeping on mutex. We want to force Program_13 to 
-             * run before Program_14. If Program_13 ran first, then mutex2 has a Semaphore value of 1
-             * so a call to P() shouldn't do anything here. Otherwise, if we're running Program_14
-             * before Program_13, then this call will be on a Semaphore with value of 0 and so will
-             * put Program_14 to sleep so Program_13 can run. 
-             */
+            // Main is sleeping on ordering. T1 is sleeping on mutex. We want to
+            // force Program_13 to run before Program_14. If Program_13 ran
+            // first, then mutex2 has a Semaphore value of 1 so a call to P()
+            // shouldn't do anything here. Otherwise, if we're running
+            // Program_14 before Program_13, then this call will be on a
+            // Semaphore with value of 0 and so will put Program_14 to sleep so
+            // Program_13 can run. 
             mutex2.P();
 
-            /* Should now block and donate to Program_12 */
+            // Should now block and donate to Program_12
             mutex.V();
             conditionLock.acquire();
 
@@ -500,11 +515,12 @@ public class LotterySchedulerTest
 
             ordering2.V(); // Wake up Program_12 again before blocking. 
 
-            /* Program_13 is holding this. It goes T3 ---> L2, T2 -----> L1, T1 */
+            // Program_13 is holding this. It goes T3 ---> L2, T2 -----> L1, T1
             lock2.acquire();
             lock2.release();
 
-            /* Now that we're back, Program_12 and Program_13 must have already exited. Verify priority and wake main */
+            // Now that we're back, Program_12 and Program_13 must have already
+            // exited. Verify priority and wake main
             st = Machine.interrupt().disable();
             int checkValue = currentThreadState.donationManagementDB.size();
             Lib.assertTrue(checkValue == 0, "** Donation DB ERROR: expected 0, got "+checkValue);
@@ -512,11 +528,13 @@ public class LotterySchedulerTest
             Lib.assertTrue(checkValue == 100, "** DONATION ERROR: expected 100, got "+ checkValue);
             Machine.interrupt().restore(st);
 
-            /* Now wake up main and go to sleep. Then main will try to join() compelling donation */ 
+            // Now wake up main and go to sleep. Then main will try to join()
+            // compelling donation 
             ordering.V(); // Wake up main.
             ordering.P(); // Sleep this thread. 
 
-            /* Now that we're back, main must be waiting for us to finish. Verify priority donation and exit */
+            // Now that we're back, main must be waiting for us to finish.
+            // Verify priority donation and exit
             st = Machine.interrupt().disable();
             checkValue = ThreadedKernel.scheduler.getEffectivePriority(KThread.getCurrentThread());
             Lib.assertTrue(checkValue == 101, "** DONATION ERROR: expected 101, got "+ checkValue);
@@ -526,7 +544,8 @@ public class LotterySchedulerTest
         }
     }
 
-    /* Test basic fork/join operations and thread priority. This is a prelim and should be enhanced */
+    // Test basic fork/join operations and thread priority. This is a prelim and
+    // should be enhanced
     public static boolean test1() 
     {
         Lib.debug(dbgTesting, "[ TEST DRIVER ]: Entered PriorirtyScheduler test1 routine...");
@@ -556,7 +575,7 @@ public class LotterySchedulerTest
         return EXIT_SUCCESS;   
     }
 
-    /* A basic thread fork/join test with priority donation */
+    // A basic thread fork/join test with priority donation
     public static boolean test2()
     {
         String ID = "test2";
@@ -569,7 +588,8 @@ public class LotterySchedulerTest
         prog1_thread.setName("PROG1");
         prog3_thread.setName("PROG3");
 
-        /* Set priority of the 3 created threads and assert correct expected priorities*/
+        // Set priority of the 3 created threads and assert correct expected
+        // priorities*/
         boolean oldInt = Machine.interrupt().disable();
         ThreadedKernel.scheduler.setPriority(prog2_thread, 5);
         ThreadedKernel.scheduler.setPriority(prog1_thread, 1);
@@ -580,14 +600,15 @@ public class LotterySchedulerTest
             "Expected 5, got " + ThreadedKernel.scheduler.getEffectivePriority(prog2_thread));
         Machine.interrupt().restore(oldInt);
 
-        /* Begin execution of thread 1 (Program 1) */
+        // Begin execution of thread 1 (Program 1)
         prog1_thread.fork();
 
-        /* Call mutex. This will put the current thread (should be main) to sleep */
+        // Call mutex. This will put the current thread (should be main) to
+        // sleep
         Lib.debug(dbgTesting,"calling mutex.P() in test2()");
         mutex.P();
 
-        /* Run program 2 and 3 */        
+        // Run program 2 and 3        
         prog2_thread.fork();
         prog3_thread.fork();
 
@@ -601,17 +622,16 @@ public class LotterySchedulerTest
         return EXIT_SUCCESS;
     }
 
-    /*
-     * Run 3 threads of Program_4. All threads will have the same priority which will asses
-     * whether Round-Robin type functionality still exists. Also, we use a shared data variable
-     * to index the counts which will identify any issues with order of execution. 
-     */
+    // Run 3 threads of Program_4. All threads will have the same priority which
+    // will asses whether Round-Robin type functionality still exists. Also, we
+    // use a shared data variable to index the counts which will identify any
+    // issues with order of execution. 
     public static boolean test4()
     {
         String ID = "test4";
         Lib.debug(dbgTesting,ID+ " Entering test...");
     
-        /* All should be initialized with default priority of 1 */
+        // All should be initialized with default priority of 1
         KThread t1 = new KThread(new Program_4(1));
         KThread t2 = new KThread(new Program_4(1));
         KThread t3 = new KThread(new Program_4(1));
@@ -623,7 +643,7 @@ public class LotterySchedulerTest
         t2.fork();
         t3.fork();
 
-        /* Now join() this thread to wait for the other three to finish */
+        // Now join() this thread to wait for the other three to finish
         t1.join();
         t2.join();
         t3.join();
@@ -631,7 +651,8 @@ public class LotterySchedulerTest
         return EXIT_SUCCESS;
     }
         
-    /* This test ensures that no priority donation takes place when transferPriority is false */
+    // This test ensures that no priority donation takes place when
+    // transferPriority is false
     public static boolean test3()
     {
         Lib.debug(dbgTesting,"Beginning test 3");
@@ -656,7 +677,8 @@ public class LotterySchedulerTest
         return EXIT_SUCCESS;
     }
 
-    /* Burn this sucker down. Run as many threads in as many different ways possible to try to break the scheduler */
+    // Burn this sucker down. Run as many threads in as many different ways
+    // possible to try to break the scheduler
     public static boolean test5()
     {
        Lib.debug(dbgTesting,"Beginning test 4");
@@ -820,7 +842,7 @@ public class LotterySchedulerTest
         return EXIT_SUCCESS; 
     }
 
-    /* Run 3 threads of very different priorities and dump their execution order */
+    // Run 3 threads of very different priorities and dump their execution order
     public static boolean test6()
     {
         System.out.println("Entered test6()");
@@ -866,7 +888,9 @@ public class LotterySchedulerTest
         return true;
     }
 
-    /* Run a series of 3 programs with resources used in a systematic way to compel donation transitivity, concurrent donation, and donation revocation */
+    // Run a series of 3 programs with resources used in a systematic way to
+    // compel donation transitivity, concurrent donation, and donation
+    // revocation
     public static boolean test8()
     {
         Lib.debug(dbgTesting, "[ TEST8 ]: Entered TEST8");
@@ -882,13 +906,13 @@ public class LotterySchedulerTest
         t3.setName("T3");
         Machine.interrupt().restore(st);
     
-        /* Fork t1 then yield so that t1 can acquire resources */
+        // Fork t1 then yield so that t1 can acquire resources
         t1.fork();
         Lib.debug(dbgTesting, "Main is sleeping on the ordering lock now so T1 can run.");
         ordering.P();
         Lib.debug(dbgTesting, "Main is back from ordering lock, forking T2 and T3");
 
-        /* Now that t1 has the resources it needs, fork the remaining threads */
+        // Now that t1 has the resources it needs, fork the remaining threads
         t2.fork();
         t3.fork();
          
@@ -896,7 +920,8 @@ public class LotterySchedulerTest
         ordering.P();
         Lib.debug(dbgTesting, "Main is back from ordering sleep and is waking up T1 sleeping on mutex here");
 
-        /* We were just woken up by Program_14 which is sleeping on ordering now. Wake it back up and join() against it */ 
+        // We were just woken up by Program_14 which is sleeping on ordering
+        // now. Wake it back up and join() against it 
         ordering.V();
 
         Lib.debug(dbgTesting, "main joining on t1");
@@ -906,14 +931,15 @@ public class LotterySchedulerTest
         Lib.debug(dbgTesting, "main joining on t3");
         t3.join();
 
-        /* If nothing 'sploded, it must have executed properly so return success */
+        // If nothing 'sploded, it must have executed properly so return success
         return EXIT_SUCCESS;
     }
 
-    /* Run all tests defined here */
+    // Run all tests defined here 
     public static void runall() 
     {
-         Lib.assertTrue(test1());    //Check for return value per test. They should return true if they succeed. 
+         Lib.assertTrue(test1());    //Check for return value per test. They
+         should return true if they succeed. 
          System.out.println("[ TEST1 ]: PASSED");
          Lib.assertTrue(test2());   
          System.out.println("[ TEST2 ]: PASSED");
@@ -929,7 +955,7 @@ public class LotterySchedulerTest
          System.out.println("[ TEST8 ]: PASSED");
     }
 
-    /* Global configuration and debug parameters */
+    // Global configuration and debug parameters 
     private static final char dbgTesting = 'Q';
     private static final boolean EXIT_SUCCESS = true;
     private static final boolean EXIT_FAILURE = false;
