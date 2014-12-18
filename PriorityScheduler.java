@@ -105,9 +105,7 @@ public class PriorityScheduler extends Scheduler
         return true;
     }
 
-    /** 
-     * Run self tests for the scheduler 
-     */
+    /** Run self tests for the scheduler */
     public static void selfTest() {
         string welcomeString = 
             "----------------------------------------\n"
@@ -118,19 +116,13 @@ public class PriorityScheduler extends Scheduler
         PrioritySchedulerTest.runall();   
     }
 
-    /**
-     * The default priority for a new thread. Do not change this value.
-     */
+    /** The default priority for a new thread. Do not change this value.  */
     public static final int priorityDefault = 1;
 
-    /**
-     * The minimum priority that a thread can have. Do not change this value.
-     */
+    /** The minimum priority that a thread can have. Do not change this value.*/
     public static final int priorityMinimum = 0;
 
-    /**
-     * The maximum priority that a thread can have. Do not change this value.
-     */
+    /** The maximum priority that a thread can have. Do not change this value.*/
     public static final int priorityMaximum = 7;    
 
     protected int getPriorityMaximum() {
@@ -144,7 +136,7 @@ public class PriorityScheduler extends Scheduler
     /**
      * Return the scheduling state of the specified thread.
      *
-     * @param thread the thread whose scheduling state to return.
+     * @param   thread  The thread whose scheduling state to return.
      * @return the scheduling state of the specified thread.
      */
     protected ThreadState getThreadState(KThread thread) {
@@ -154,9 +146,7 @@ public class PriorityScheduler extends Scheduler
         return (ThreadState) thread.schedulingState;
     }
 
-    /** 
-     * A <tt>ThreadQueue</tt> that sorts threads by priority. 
-     */
+    /** A ThreadQueue that sorts threads by priority. */
     protected class PriorityQueue extends ThreadQueue 
     {
         protected LinkedList<ThreadState>[] arrayOfQueues; 
@@ -164,8 +154,10 @@ public class PriorityScheduler extends Scheduler
         /**
          * Construct a new PriorityQueue. 
          *
-         * @param transferPriority indicate whether to enable priority transfer.
-         * @param queueMax Number of discrete priorities this queue supports
+         * @param   transferPriority    Indicate whether to enable priority 
+         *                              transfer.
+         * @param   queueMax            Number of discrete priorities this 
+         *                              queue supports
          */
         PriorityQueue(boolean transferPriority, int queueMax) {
             checkMode = kCheckModePriority;
@@ -191,7 +183,7 @@ public class PriorityScheduler extends Scheduler
         /** 
          * Return a queue from the arrayOfQueues.
          *
-         * @param index of queue in arrayOfQueues
+         * @param   index   Item location of queue in arrayOfQueues
          * @return LinkedList of ThreadStates
          */
         protected LinkedList<ThreadState> getQueue(int index) { 
@@ -217,9 +209,7 @@ public class PriorityScheduler extends Scheduler
 
 
 
-        /** 
-         * Dump contents of this queue. Used for debugging.  
-         */
+        /** Dump contents of this queue. Used for debugging. */
         @Override
         public void print() {
             String[] arrayOfStrings = new String[getQueueSize()];
@@ -292,9 +282,9 @@ public class PriorityScheduler extends Scheduler
          * that have made donations. 
          *
          * @param goodbyeThread ThreadState being chosen to be removed from 
-         * this queue. 
-         * @return the number of donors that were told to revoke their 
-         * donations to goodbyeThread 
+         *                      this queue. 
+         * @return  the number of donors that were told to revoke their 
+         *          donations to goodbyeThread 
          */
         protected int revokeAllDonationsMadeFromQueue(ThreadState goodbyeThread {
             if(goodbyeThread == null) { return kStatusError; }
@@ -328,9 +318,7 @@ public class PriorityScheduler extends Scheduler
             return numRevoked;
         }
 
-        /** 
-         * Return the next thread from the queue by priority. 
-         */
+        /** Return the next thread from the queue by priority. */
         public KThread nextThread() {
             Lib.assertTrue(Machine.interrupt().disabled());
             int i = getNextNonemptyQueue();
@@ -402,8 +390,8 @@ public class PriorityScheduler extends Scheduler
         /** 
          * Return the highest-index non-empty queue.
          *
-         * @return index of highest priority non-empty queue or kInvalidQueue 
-         * if no such queue exists.  
+         * @return  Index of highest priority non-empty queue or kInvalidQueue 
+         *          if no such queue exists.  
          */
         protected int getNextNonemptyQueue() {
             int i = getQueueSize()-1;
@@ -417,7 +405,7 @@ public class PriorityScheduler extends Scheduler
          * Return the next thread that <tt>nextThread()</tt> would return,
          * without modifying the state of this queue.
          *
-         * @return the next thread that <tt>nextThread()</tt> would return.
+         * @return The next thread that <tt>nextThread()</tt> would return.
          */
         protected ThreadState pickNextThread() {
             int i = getPriorityMaximum();
@@ -426,20 +414,28 @@ public class PriorityScheduler extends Scheduler
             }
             return getQueue(i).peek(); 
         }
-        
-        /* PriorityQueue members */ 
+       
+        /** True if donation is enabled, otherwise false */ 
         public boolean transferPriority;
+
+        /** Displays warning when priority queue becomes empty if true */
         protected boolean emptyReadyWarning = true;
+
+        /** Holder of blocking resource */
         protected ThreadState resourceHolder;
+
+        /** Indicate type of queue (lottery or priority). */
         protected int checkMode;
+
+        /** Identifier for each queue. */
         protected final int queueID = hashCode()%10000;
 
 
         /** 
          * Consistency checks for when a queue is empty
          *
-         * @param sanityThread input thread that is being checked by 
-         * verifyQueueData()
+         * @param sanityThread  Input thread that is being checked by 
+         *                      verifyQueueData()
          * @return true if the queue was in-fact empty. 
          */ 
         protected boolean emptyQueueCheck(ThreadState sanityThread) {
@@ -467,11 +463,12 @@ public class PriorityScheduler extends Scheduler
          }
 
         /**
-         * Consistency check for currentBest* caches. Note that these checks 
-         * are incompatible with lottery scheduler. 
+         * Consistency check for currentBest caches. 
          * 
-         * @param sanityThread input thread that is being checked by 
-         * verifyQueueData().
+         * Note that these checks are incompatible with lottery scheduler. 
+         * 
+         * @param sanityThread  Input thread that is being checked by 
+         *                      verifyQueueData().
          * @see LotteryScheduler.java.
          */
         protected void currentBestCacheChecks(ThreadState sanityThread) {
@@ -502,8 +499,10 @@ public class PriorityScheduler extends Scheduler
 
         /**
          * Consistency checks specific to PriorityScheduler's priority 
-         * implementation. Ensures sanityThread came from a queue of the right 
-         * effective priority. Note that these checks are incompatible with 
+         * implementation. 
+         *
+         * Ensures sanityThread came from a queue of the right effective 
+         * priority. Note that these checks are incompatible with 
          * LotteryScheduler. 
          *
          * @param sanityThread thread being checked by verifyQueueData().
@@ -579,10 +578,10 @@ public class PriorityScheduler extends Scheduler
          *
          * This method is a dispatch method for various queue state conditions.  
          *
-         * @param mode coorsponding to what scheduler we're running.
-         * This way, we can run only those tests that are pertinent to the 
-         * particular scheduler without having to override verifyQueueData in 
-         * the LotteryQueue. 
+         * @param mode  Coorsponding to what scheduler we're running.
+         *              This way, we can run only those tests that are pertinent 
+         *              to the particular scheduler without having to override 
+         *              verifyQueueData in the LotteryQueue. 
          * @return ThreadState that this checker used in its verifications. 
          * @see checkMode
          */
@@ -614,7 +613,7 @@ public class PriorityScheduler extends Scheduler
      * priority, its effective priority, any objects it owns, and the queue
      * it's waiting for, if any.
      *
-     * @see        nachos.threads.KThread#schedulingState
+     * @see nachos.threads.KThread#schedulingState
      */
     protected class ThreadState 
     { 
@@ -866,11 +865,11 @@ public class PriorityScheduler extends Scheduler
         /** 
          * Check if effective priority may have changed.
          *
-         * @param donor thread that may have influenced this thread's effective 
-         * priority. 
-         * @param event that donor has performed against this thread.  
+         * @param donor Thread that may have influenced this thread's effective 
+         *              priority. 
+         * @param event That donor has performed against this thread.  
          * @return true if effective priority may have changed and needs to be 
-         * recalculated.
+         *              recalculated.
          */
         protected boolean priorityUpdateRequired(DonationTracker donor, String event) {
             if(event == "revoke") { 
@@ -936,9 +935,9 @@ public class PriorityScheduler extends Scheduler
         /**
          * Move a thread from one queue to another.
          *
-         * @param queue that is involed in the move. 
-         * @param from original queue this thread is currently on.
-         * @param to queue this thread is being moved to.
+         * @param queue The Queue that is involed in the move. 
+         * @param from  Original queue this thread is currently on.
+         * @param to    Queue this thread is being moved to.
          */
         protected void moveThreadOnQueue(PriorityQueue queue, int from, int to) {
             Lib.assertTrue(queue.getQueue(from).remove(this));
@@ -952,16 +951,16 @@ public class PriorityScheduler extends Scheduler
         /**
          * receiveOffer() is responsible for processing all priority donations 
          * received by this thread. 
-         * <p>
+         * 
          * If the donated priority doesn't change this threads effective 
          * priority, just add the donation to the database of donations 
          * received. If it does, then update effective priority via 
          * calculatePriorityDonation()
          *
-         * @param offer of priority being made to this thread.
-         * @param donor thread offering the donation.
-         * @param waitQueue that donor is waiting for resources on and that 
-         * this thread is the resourceHolder of.
+         * @param offer     Offer of priority being made to this thread.
+         * @param donor     Thread offering the donation.
+         * @param waitQueue Queue that donor is waiting for resources on and that 
+         *                  this thread is the resourceHolder of.
          */
         protected void receiveOffer(int offer, ThreadState donor, PriorityQueue waitQueue) {
             Lib.assertTrue(Machine.interrupt().disabled());
@@ -1042,11 +1041,12 @@ public class PriorityScheduler extends Scheduler
         
         /**
          * Remove waitQueue from this thread's queuesThisThreadIsOn database. 
+         *
          * This method should be called whenever this thread is pulled from the 
          * waitQueue (e.g., as a result of a call to nextThread()
          *
-         * @param waitQueue that we're removing from this thread's 
-         * queuesThisThreadIsOn database
+         * @param waitQueue Queue that we're removing from this thread's 
+         *                  queuesThisThreadIsOn database
          */
         protected void deleteQueueFromThreadDB(ThreadQueue waitQueue) {
             if(!queuesThisThreadIsOn.remove(waitQueue)) {
@@ -1066,7 +1066,7 @@ public class PriorityScheduler extends Scheduler
         /**
          * Send an updated priority donation offer to all threads this thread 
          * has sent an offer to previously.
-         * <p>
+         * 
          * This method should be called whenever this thread's effective 
          * priority changes (e.g., in the event this thread receives a better 
          * donation offer or it's setPriority() method is called with
@@ -1088,12 +1088,12 @@ public class PriorityScheduler extends Scheduler
         /**
          * Called when <tt>waitForAccess(thread)</tt> (where <tt>thread</tt> is
          * the associated thread) is invoked on the specified priority queue.
-         * <p>
+         * 
          * The associated thread is therefore waiting for access to the
          * resource guarded by <tt>waitQueue</tt>. This method is only called
          * if the associated thread cannot immediately obtain access.
          *
-         * @param waitQueue the queue that the associated thread is
+         * @param waitQueue The queue that the associated thread is
          * @see nachos.threads.ThreadQueue#waitForAccess
          */
         public void waitForAccess(PriorityQueue waitQueue) {
@@ -1145,7 +1145,7 @@ public class PriorityScheduler extends Scheduler
          * Figure out whether or not to make a priority donation to the current 
          * resdource holder of the wait queue and if so, make it.
          *
-         * @param waitQueue priority queue thread is initiating a donation from. 
+         * @param waitQueue Priority queue thread is initiating a donation from. 
          */
         private void checkIfDonationRequired(PriorityQueue waitQueue){
             Lib.assertTrue(Machine.interrupt().disabled());
@@ -1188,36 +1188,64 @@ public class PriorityScheduler extends Scheduler
             }
         }        
 
-        /* ThreadState members */
+
+        /** Thread encapsulated by this ThreadState */
         protected KThread thread;
+
+        /** Thread's inherent priority */
         protected int priority;
+
+        /** Database of donations to this thread */
         protected HashSet<DonationTracker> donationManagementDB;
+
+        /** Database of which queues this thread is waiting on */
         protected HashSet<PriorityQueue> queuesThisThreadIsOn;
+
+        /** Database of which threads this thread has donated to */
         protected HashSet<ThreadState> threadsDonatedTo;
+
+        /** Best offer of priority received so far */
         protected int currentBestOffer;
+
+        /** Thread that has made the current best offer */
         protected ThreadState currentBestDonor;
     } // End of ThreadState class
 
-    /* PriorityScheduler members */
+    /** Disable or enable assert functionality */
     private static boolean isAssertEnabled = false; 
+
+    /** Invalid effective priority */
     private static final int kInvalidEP = -1;
+
+    /** Invalid queue index */
     protected static final int kInvalidQueueIndex = -1;
+
+    /** Error condition. */
     protected static final int kStatusError = -2;
+
+    /** Indicates that the current queue is a priority queue. */
     protected static final int kCheckModePriority = 1;
+
+    /** Indicates that the current queue is a lottery queue. */
     protected static final int kCheckModeLottery = 2;
+
+    /** Debug constant for Nachos debugger. */
     protected static final char dbgPSched = 'q'; 
+
+    /** MOTD banner */
     protected String banner;
    
 
 
 
     /**
-     * A wrapper class for nachos.machine.Lib. This wrapper allows easy 
-     * disablement of assert functionality via the global boolean 
-     * PriorityScheduler.isAssertEnabled. If isAssertEnabled is set to true, 
-     * this class simply forwards any calls to Lib.x to nachos.machine.Lib.x 
-     * for Lib method x. If it is false, calls to Lib.assertTrue() and 
-     * Lib.assertNotReached() are dropped here.
+     * A wrapper class for nachos.machine.Lib. 
+     * 
+     * This wrapper allows easy disablement of assert functionality via the 
+     * global boolean PriorityScheduler.isAssertEnabled. If isAssertEnabled is 
+     * set to true, this class simply forwards any calls to Lib.x to 
+     * nachos.machine.Lib.x * for Lib method x. If it is false, calls to 
+     * Lib.assertTrue() and Lib.assertNotReached() are dropped here.
      */
     protected static class Lib {
         protected static void assertTrue(boolean statement, String message) { 

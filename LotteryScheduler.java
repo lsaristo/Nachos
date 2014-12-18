@@ -234,10 +234,11 @@ public class LotteryScheduler extends PriorityScheduler
 
 
         /** 
-         * Gets this thread's effective priority. Override of 
-         * ThreadState.getEffectivePriority(). Here, effective priority is the 
-         * sum of this thread's intrinsic priority as well as the sum of all 
-         * valid donations to this thread. 
+         * Gets this thread's effective priority. 
+         * 
+         * Override of ThreadState.getEffectivePriority(). Here, effective 
+         * priority is the sum of this thread's intrinsic priority as well as 
+         * the sum of all valid donations to this thread. 
          *
          * @return this thread's effective priority. 
          */
@@ -256,19 +257,18 @@ public class LotteryScheduler extends PriorityScheduler
         /**
          * Check if effective priority may have changed and needs to be 
          * recalculated.
-         * <p>
+         *
          * In a priority queue, a thread's effective priority does not 
          * necessarily change after receiving a priority donation from another 
          * thread. As such, this method is used to avoid needlessly 
          * recalculating effective priority which can be expensive. 
-         * <p>
          * In a lottery queue, however, any donation or revocation of priority 
          * changes a thread's effective priority and so this method is 
          * overridden for the lottery queue to always return true, forcing 
          * recalculation after every priority donation and revocation. 
          *
-         * @param donor that may have influenced this thread's priority.
-         * @param event that the donor has performed against this thread. 
+         * @param   donor   Donor that may have influenced this thread priority.
+         * @param   event   What happend to trigger this possible donation. 
          * @return true if this thread's priority should be recalculated.
          */
         @Override
@@ -282,7 +282,7 @@ public class LotteryScheduler extends PriorityScheduler
          * Recalculate a thread's effective priority to determine if it has 
          * changed and if so, propagate that change to all other threads it has 
          * donated to. 
-         * <p>         
+         *
          * In a lottery queue, calculation of effective priority is done in 
          * real time via getEffectivePriority(). Moreover, we already know that 
          * any change in donation changes this thread's effective priority. 
